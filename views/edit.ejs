@@ -76,8 +76,8 @@
                         <div class="mb-3">
                             <label for="user" class="form-label">Rol</label>
                             <select id="rol" name="rol" class="form-select" aria-label="Default select example">
-                                <option value="1" selected>Administrador</option>
-                                <option value="2">Digitador</option>
+                                <option value="1" <%= user.rol==1 ? 'selected': "" %>>Administrador</option>
+                                <option value="2" <%= user.rol==2 ? 'selected': "" %>>Digitador</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>

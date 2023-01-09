@@ -85,7 +85,11 @@
                                 <%= user.pass %>
                             </td>
                             <td>
-                                <%= user.rol %>
+                                <% if(user.rol == 1){  %>
+                                        Administrador
+                                <%  } else if(user.rol == 2){ %>
+                                        Digitador 
+                                <% } %>        
                             </td>
                             <td>
                                 <a href="/edit/<%= user.id %>" class="btn btn-outline-info">Editar</a>
