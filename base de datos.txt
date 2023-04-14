@@ -1,0 +1,117 @@
+base de datos 
+
+
+Clientes: Esta tabla podría incluir información básica sobre tus clientes, como su nombre, dirección, número de teléfono y dirección de correo electrónico.
+
+Reservas: Esta tabla podría incluir información sobre las reservas que tus clientes hagan en tu restaurante. Podría incluir detalles como la fecha y hora de la reserva, el número de personas que asistirán, y cualquier requisito especial que tengan.
+
+Menús: Esta tabla podría incluir información sobre los platos y bebidas que sirves, incluyendo sus nombres, precios y descripciones.
+
+Pedidos: Esta tabla podría incluir información sobre los pedidos realizados por los clientes, incluyendo los elementos específicos que han pedido, su precio y cualquier modificación especial que hayan solicitado.
+
+Empleados: Esta tabla podría incluir información sobre tus empleados, incluyendo su nombre, cargo, salario y número de identificación de empleado.
+
+Proveedores: Esta tabla podría incluir información sobre los proveedores con los que trabajas, incluyendo su nombre, dirección y número de teléfono.
+
+Historial de ventas: Esta tabla podría incluir información sobre las ventas realizadas en tu restaurante, incluyendo detalles como el tipo de pago utilizado, el monto total de la venta y la fecha en que se realizó.
+
+Inventario: Esta tabla podría incluir información sobre el inventario de alimentos y bebidas de tu restaurante, incluyendo la cantidad de cada elemento disponible y su ubicación en tu establecimiento.
+
+
+//POSIBLE BASE DE DATOS
+
+CREATE TABLE Clientes (
+  ID_Cliente INT PRIMARY KEY,
+  Nombre VARCHAR(50),
+  Email VARCHAR(100),
+  Telefono VARCHAR(20)
+);
+
+CREATE TABLE Mesas (
+  ID_Mesa INT PRIMARY KEY,
+  Capacidad INT
+);
+
+CREATE TABLE Reservaciones (
+  ID_Reservacion INT PRIMARY KEY,
+  ID_Cliente INT,
+  ID_Mesa INT,
+  Fecha DATE,
+  Hora TIME,
+  Duracion INT,
+  FOREIGN KEY (ID_Cliente) REFERENCES Clientes(ID_Cliente),
+  FOREIGN KEY (ID_Mesa) REFERENCES Mesas(ID_Mesa)
+);
+
+CREATE TABLE Empleados (
+  ID_Empleado INT PRIMARY KEY,
+  Nombre VARCHAR(50),
+  Email VARCHAR(100),
+  Telefono VARCHAR(20),
+  Puesto VARCHAR(50),
+  Salario DECIMAL(10,2),
+  Fecha_Contratacion DATE
+);
+
+CREATE TABLE Platillos (
+  ID_Platillo INT PRIMARY KEY,
+  Nombre VARCHAR(50),
+  Descripcion TEXT,
+  Precio DECIMAL(10,2)
+);
+
+CREATE TABLE Ingredientes (
+  ID_Ingrediente INT PRIMARY KEY,
+  Nombre VARCHAR(50),
+  Descripcion TEXT
+);
+
+CREATE TABLE Platillos_Ingredientes (
+  ID_Platillo INT,
+  ID_Ingrediente INT,
+  Cantidad INT,
+  PRIMARY KEY (ID_Platillo, ID_Ingrediente),
+  FOREIGN KEY (ID_Platillo) REFERENCES Platillos(ID_Platillo),
+  FOREIGN KEY (ID_Ingrediente) REFERENCES Ingredientes(ID_Ingrediente)
+);
+
+CREATE TABLE Órdenes (
+  ID_Orden INT PRIMARY KEY,
+  ID_Mesa INT,
+  Fecha DATE,
+  Hora TIME,
+  FOREIGN KEY (ID_Mesa) REFERENCES Mesas(ID_Mesa)
+);
+
+CREATE TABLE Ordenes_Platillos (
+  ID_Orden INT,
+  ID_Platillo INT,
+  Cantidad INT,
+  PRIMARY KEY (ID_Orden, ID_Platillo),
+  FOREIGN KEY (ID_Orden) REFERENCES Órdenes(ID_Orden),
+  FOREIGN KEY (ID_Platillo) REFERENCES Platillos(ID_Platillo)
+);
+
+CREATE TABLE Métodos_Pago (
+  ID_Método_Pago INT PRIMARY KEY,
+  Nombre VARCHAR(50)
+);
+
+CREATE TABLE Órdenes_Métodos_Pago (
+  ID_Orden INT,
+  ID_Método_Pago INT,
+  Monto DECIMAL(10,2),
+  PRIMARY KEY (ID_Orden, ID_Método_Pago),
+  FOREIGN KEY (ID_Orden) REFERENCES Órdenes(ID_Orden),
+  FOREIGN KEY (ID_Método_Pago) REFERENCES Métodos_Pago(ID_Método_Pago)
+);
+
+//////
+
+CREATE TABLE Inventario (
+  ID_Inventario INT PRIMARY KEY,
+  ID_Ingrediente INT,
+  Cantidad INT,
+  Fecha DATE,
+  FOREIGN KEY (ID_Ingrediente) REFERENCES Ingredientes(ID_Ingrediente)
+);
