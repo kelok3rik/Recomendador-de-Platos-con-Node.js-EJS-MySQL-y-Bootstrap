@@ -3,16 +3,17 @@ const router = express.Router();
 
 const conexion = require('./DATABASE/db.js');
 
+
+
+//ruta para mostrar basico
 router.get('/', (req, res) => {
-    conexion.query('CALL mostrarEmpleados();', (error, results) => {
-        if (error) {
-            throw error;
-        } else {
-            res.render('index', { results: results[0] });
-        }
-    })
+    
+            res.render('index');
+     
 })
 
+//Rutas para mostrar Mantenimientos
+//RUTA PARA MOSTRAR EMPLEADOS
 router.get('/mantenimientoEmpleado', (req, res) => {
     conexion.query('CALL mostrarEmpleados();', (error, results) => {
         if (error) {
@@ -23,18 +24,25 @@ router.get('/mantenimientoEmpleado', (req, res) => {
     })
 })
 
+//RUTA PARA MOSTRAR MENUS
+router.get('/mantenimientoMenu', (req, res) => {
+   
+    res.render('mantenimientoMenu');
+     
+})
 
 
-//RUTA PARA CREAR
+
+//RUTA PARA CREAR UN NUEVO EMPLEADO
 router.get('/registrarEmpleado', (req, res) => {
     res.render('registrarEmpleado');
 })
 
-const crud = require('./Controllers/crud');
-router.post('/registrarEmpleado', crud.save);
-router.post('/editarEmpleado',crud.update);
+const crudEmpleado = require('./Controllers/crudEmpleado');
+router.post('/registrarEmpleado', crudEmpleado.save);
+router.post('/editarEmpleado',crudEmpleado.update);
 
-//RUTA PARA EDITAR
+//RUTA PARA EDITAR UN EMPLEADO
 router.get('/editarEmpleado/:ID_EMPLEADO', (req, res) => {
     const id = req.params.ID_EMPLEADO;
     conexion.query("SELECT * FROM Empleados where ID_EMPLEADO=?", [id], (error, results) => {
@@ -46,7 +54,7 @@ router.get('/editarEmpleado/:ID_EMPLEADO', (req, res) => {
     })
 })
 
-//RUTA PARA ELIMINAR
+//RUTA PARA ELIMINAR UN EMPLEADO (NO FUNCIONA)
 router.get('/delete/:ID_EMPLEADOS', (req,res)=>{
     const id = req.params.id;
     conexion.query('DELETE FROM Empleados where id=?',[id],(error,resuts)=>{
