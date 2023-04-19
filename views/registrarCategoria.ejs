@@ -85,53 +85,21 @@
             </div>
         </div>
     </nav>
-    <% if(user){ %>
-        <div class="container-fluid p-5">
-            <div class="card-header">
-                <div class="card-header">Editar</div>
-                <div class="card-body">
-                    <form action="/editarEmpleado" method="POST">
-                        <input id="ID_EMPLEADO" name="ID_EMPLEADO" value="<%= user.ID_EMPLEADO %>" hidden>
-                        <div class="mb-3">
-                            <label for="ID_EMPLEADO" class="form-label">NOMBRE</label>
-                            <input type="text" class="form-control" id="NOMBRE" name="NOMBRE" value="<%= user.Nombre %>"
-                                tabindex="1">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">EMAIL</label>
-                            <input type="text" class="form-control" id="EMAIL" name="EMAIL" value="<%= user.Email %>"
-                                tabindex="1">
-                        </div>
-                        <!-- <div class="mb-3">
-                            <label for="user" class="form-label">Rol</label>
-                            <select id="rol" name="rol" class="form-select" aria-label="Default select example">
-                                 <option value="0" <%= user.rol==0 ? 'selected': "" %>>Inactivo</option>
-                                <option value="1" <%= user.rol==1 ? 'selected': "" %>>Administrador</option>
-                                <option value="2" <%= user.rol==2 ? 'selected': "" %>>Digitador</option> 
-                            </select>
-                        </div>  -->
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">SALARIO</label>
-                            <input type="text" class="form-control" id="SALARIO" name="SALARIO" value="<%= user.Salario %>"
-                                tabindex="1">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">PUESTO</label>
-                            <input type="text" class="form-control" id="PUESTO" name="PUESTO" value="<%= user.Puesto %>"
-                                tabindex="1">
-                        </div>
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">TELEFONO</label>
-                            <input type="text" class="form-control" id="TELEFONO" name="TELEFONO" value="<%= user.Telefono %>"
-                                tabindex="1">
-                        </div>
-                        <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
-                        <a href="/mantenimientoEmpleado" class="btn btn-secondary">Cancelar</a>
-                    </form>
-                </div>
+    <div class="container-fluid p-5">
+        <div class="card-header">
+            <div class="card-header">Nuevo Registro</div>
+            <div class="card-body">
+                <form action="/registrarCategoria" method="POST">
+                    <div class="mb-3">
+                        <label for="user" class="form-label">NOMBRE</label>
+                        <input type="text" class="form-control" id="NOMBRE" name="NOMBRE" tabindex="1">
+                    </div>
+                    <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
+                    <a href="/mantenimientoCategoria" class="btn btn-secondary">Cancelar</a>
+                </form>
             </div>
         </div>
-        <% } %>
+    </div>
 </body>
 
 </html>
