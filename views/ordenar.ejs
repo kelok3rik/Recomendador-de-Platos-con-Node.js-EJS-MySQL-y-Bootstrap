@@ -105,9 +105,13 @@
                 <input id="total" name="total" value="0">
 
 
-                <input type="text" id="search" />
-                <div id="results"></div>
+                <label for="nombre_empleado">Nombre:</label>
+                <input type="text" id="nombre_empleado" name="nombre_empleado" onkeyup="autocompletar()">
 
+                <div id="sugerencias"></div>
+
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre">
+                <input type="text" name="email" id="email" placeholder="Email">
 
             </div>
         </div>
@@ -210,25 +214,43 @@
 
     </script>
 
-   
+
 
     <script>
-        var searchInput = document.getElementById('search');
-        var resultsDiv = document.getElementById('results');
+        function autocompletar() {
+            const input = document.getElementById("nombre_empleado");
+            const sugerenciasDiv = document.getElementById("sugerencias");
 
-        searchInput.addEventListener('keyup', function () {
-            fetch('/search?q=' + searchInput.value)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (results) {
-                    var html = '';
-                    for (var i = 0; i < results.length; i++) {
-                        html += '<div>' + results[i].name + '</div>';
-                    }
-                    resultsDiv.innerHTML = html;
-                });
-        });
+            // Envía una petición al servidor Node.js para obtener las sugerencias de autocompletado
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/autocompletar", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    sugerenciasDiv.innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send("texto=" + input.value);
+        }
+
+        function seleccionarEmpleado(nombre) {
+            const nombreInput = document.getElementById("nombre");
+            const emailInput = document.getElementById("email");
+
+            // Envía una petición al servidor Node.js para obtener los datos del empleado seleccionado
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/seleccionarEmpleado", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    const empleado = JSON.parse(xhr.responseText);
+                    // Muestra los datos del empleado en los diferentes inputs
+                    nombreInput.value = empleado.nombre;
+                    emailInput.value = empleado.email;
+                }
+            };
+            xhr.send("nombre=" + nombre);
+        }
     </script>
 
 </body>

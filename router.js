@@ -75,27 +75,26 @@ router.get('/ordenar', (req, res) => {
 
 ////// PUNTO PRUEBASSSSS ////// 
 
+router.post('/autocompletar', (req, res) => {
+    const texto = req.body.texto;
+    const query = "SELECT nombre FROM empleado WHERE nombre LIKE '%" + texto + "%'";
 
-const mysql2 = require('mysql2/promise');
-
-
-
-router.get('/search', async (req, res) => {
-    const q = req.query.q;
-
-    // Conexión a la base de datos
-    const connection = await mysql2.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'rest'
+    conexion.query(query, (err, result) => {
+        if (err) throw err;
+        const sugerencias = result.map((row) => `<p>${row.nombre}</p>`).join('');
+        res.send(sugerencias);
     });
+});
 
-    // Consulta los datos de la tabla
-    const [rows, fields] = await connection.execute('SELECT * FROM empleado WHERE nombre LIKE ?', [`%${q}%`]);
+router.post('/seleccionarEmpleado', (req, res) => {
+    const nombre = req.body.nombre;
+    const query = "SELECT * FROM empleado WHERE nombre = ?";
 
-    // Devuelve los resultados en formato JSON
-    res.json(rows);
+    connection.query(query, [nombre], (err, result) => {
+        if (err) throw err;
+        const empleado = result[0];
+        res.send(JSON.stringify(empleado));
+    });
 });
 
 module.exports = router;
