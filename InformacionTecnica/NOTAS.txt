@@ -1,0 +1,35 @@
+-Agregar recomendacion de categorias
+-Agregar recomendacion por ingredientes
+
+*Mantenimiento Ingrediente
+
+ CREATE TABLE Plato (
+    ID INT NOT NULL AUTO_INCREMENT,
+    Nombre VARCHAR(255) NOT NULL,
+    Descripcion TEXT,
+    Precio DECIMAL(10, 2) NOT NULL,
+    ID_Categoria_Plato INT NOT NULL,,
+    PRIMARY KEY (ID)
+);
+ CREATE TABLE Ingrediente (
+    ID INT NOT NULL AUTO_INCREMENT,
+    Nombre VARCHAR(255) NOT NULL,
+    Descripcion TEXT,
+    PRIMARY KEY (ID)
+);
+CREATE TABLE Plato_Ingrediente (
+    ID INT NOT NULL AUTO_INCREMENT,
+    Plato_ID INT NOT NULL,
+    Ingrediente_ID INT NOT NULL,
+    Cantidad DECIMAL(10, 2) NOT NULL,
+    Unidad VARCHAR(50) NOT NULL,
+    Prioridad INT NOT NULL,	///(RANGO 1-10)///
+    PRIMARY KEY (ID),
+    FOREIGN KEY (Plato_ID) REFERENCES Plato(ID),
+    FOREIGN KEY (Ingrediente_ID) REFERENCES Ingrediente(ID)
+);
+
+CREATE TABLE Categoria_Plato(
+	ID INT NOT NULL AUTO_INCREMENT,
+	Nombre VARCHAR(50) NOT NULL,
+);

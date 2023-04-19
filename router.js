@@ -7,9 +7,9 @@ const conexion = require('./DATABASE/db.js');
 
 //ruta para mostrar basico
 router.get('/', (req, res) => {
-    
-            res.render('index');
-     
+
+    res.render('index');
+
 })
 
 //Rutas para mostrar Mantenimientos
@@ -26,9 +26,9 @@ router.get('/mantenimientoEmpleado', (req, res) => {
 
 //RUTA PARA MOSTRAR MENUS
 router.get('/mantenimientoMenu', (req, res) => {
-   
+
     res.render('mantenimientoMenu');
-     
+
 })
 
 
@@ -40,12 +40,12 @@ router.get('/registrarEmpleado', (req, res) => {
 
 const crudEmpleado = require('./Controllers/crudEmpleado');
 router.post('/registrarEmpleado', crudEmpleado.save);
-router.post('/editarEmpleado',crudEmpleado.update);
+router.post('/editarEmpleado', crudEmpleado.update);
 
 //RUTA PARA EDITAR UN EMPLEADO
 router.get('/editarEmpleado/:ID_EMPLEADO', (req, res) => {
     const id = req.params.ID_EMPLEADO;
-    conexion.query("SELECT * FROM Empleados where ID_EMPLEADO=?", [id], (error, results) => {
+    conexion.query("SELECT * FROM Empleado where ID_EMPLEADO=?", [id], (error, results) => {
         if (error) {
             throw error;
         } else {
@@ -55,9 +55,9 @@ router.get('/editarEmpleado/:ID_EMPLEADO', (req, res) => {
 })
 
 //RUTA PARA ELIMINAR UN EMPLEADO (NO FUNCIONA)
-router.get('/delete/:ID_EMPLEADOS', (req,res)=>{
+router.get('/delete/:ID_EMPLEADOS', (req, res) => {
     const id = req.params.id;
-    conexion.query('DELETE FROM Empleados where id=?',[id],(error,resuts)=>{
+    conexion.query('DELETE FROM Empleado where id=?', [id], (error, resuts) => {
         if (error) {
             throw error;
         } else {
@@ -65,6 +65,38 @@ router.get('/delete/:ID_EMPLEADOS', (req,res)=>{
         }
     })
 })
+
+
+//Rutas para ordenar
+//RUTA PARA ordenar
+router.get('/ordenar', (req, res) => {
+    res.render('ordenar');
+})
+
+////// PUNTO PRUEBASSSSS ////// 
+
+
+const mysql2 = require('mysql2/promise');
+
+
+
+router.get('/search', async (req, res) => {
+    const q = req.query.q;
+
+    // Conexión a la base de datos
+    const connection = await mysql2.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'rest'
+    });
+
+    // Consulta los datos de la tabla
+    const [rows, fields] = await connection.execute('SELECT * FROM empleado WHERE nombre LIKE ?', [`%${q}%`]);
+
+    // Devuelve los resultados en formato JSON
+    res.json(rows);
+});
 
 module.exports = router;
 
