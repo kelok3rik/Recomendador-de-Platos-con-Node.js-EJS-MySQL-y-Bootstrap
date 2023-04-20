@@ -85,3 +85,27 @@
             </div>
         </div>
     </nav>
+
+    <div class="container-fluid p-5">
+        <div class="card-header">
+            <div class="card-header">Nuevo Registro</div>
+            <div class="card-body">
+                <form action="/registrarIngredientes" method="POST">
+                    <div class="mb-3">
+                        <label for="user" class="form-label">NOMBRE</label>
+                        <input type="text" class="form-control" id="NOMBRE" name="NOMBRE" tabindex="1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pass" class="form-label">DESCRIPCION</label>
+                        <input type="text" class="form-control" id="DESCRIPCION" name="DESCRIPCION" tabindex="2">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
+                    <a href="/mantenimientoIngredientes" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

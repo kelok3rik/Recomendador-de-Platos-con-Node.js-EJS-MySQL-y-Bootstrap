@@ -95,8 +95,45 @@ router.get('/editarEmpleado/:ID_EMPLEADO', (req, res) => {
     })
 })
 
+//INGREDIENTES
+//RUTA PARA MOSTRAR INGREDIENTES
+router.get('/mantenimientoIngredientes', (req, res) => {
+    conexion.query('CALL mostrarIngredientes();', (error, results) => {
+        if (error) {
+            throw error;
+        } else {
+            res.render('mantenimientoIngredientes', { results: results[0] });
+        }
+    })
+})
+
+const crudIngrediente = require('./Controllers/crudIngrediente');
+router.post('/registrarIngredientes', crudIngrediente.save);
+router.post('/editarIngredientes', crudIngrediente.update);
+
+//RUTA PARA CREAR UN INGREDIENTE
+
+router.get('/registrarIngredientes', (req, res) => {
+    res.render('registrarIngredientes');
+})
+
+//RUTA PARA EDITAR INGREDIENTE
+router.get('/editarIngredientes/:ID', (req, res) => {
+    const id = req.params.ID;
+    conexion.query("SELECT * FROM ingrediente where ID=?", [id], (error, results) => {
+        if (error) {
+            throw error;
+        } else {
+            res.render('editarIngredientes', { results: results[0] });
+        }
+    })
+})
+
+
+
+
 +
-//Rutas para ordenar
+//Rutas para ordenar ------------------------------
 //RUTA PARA ordenar
 router.get('/ordenar', (req, res) => {
     res.render('ordenar');
