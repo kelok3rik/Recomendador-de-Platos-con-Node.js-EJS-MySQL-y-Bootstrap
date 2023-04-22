@@ -129,39 +129,94 @@ router.get('/editarIngredientes/:ID', (req, res) => {
     })
 })
 
-
-
-
-+
-//Rutas para ordenar ------------------------------
-//RUTA PARA ordenar
-router.get('/ordenar', (req, res) => {
-    res.render('ordenar');
+//PLATOS
+//RUTA PARA PLATOS
+router.get('/mantenimientoPlatos', (req, res) => {
+    conexion.query('CALL mostrarPlatos();', (error, results) => {
+        if (error) {
+            throw error;
+        } else {
+            res.render('mantenimientoPlatos', { results: results[0] });
+        }
+    })
 })
 
-////// PUNTO PRUEBASSSSS ////// 
+//const crudIngrediente = require('./Controllers/crudIngrediente');
+router.post('/registrarPlatos', crudIngrediente.save);
+router.post('/editarPlatos', crudIngrediente.update);
+
+//RUTA PARA CREAR UN PLATO
+
+router.get('/registrarPlato', (req, res) => {
+    // Consulta para obtener las categorías de platos
+    conexion.query('SELECT * FROM categoria_plato', (error, results) => {
+      if (error) {
+        throw error;
+      } else {
+        // Consulta para obtener los ingredientes
+        conexion.query('SELECT * FROM ingrediente', (error, ingredientes) => {
+          if (error) {
+            throw error;
+          } else {
+            // console.log(results);
+            // console.log(ingredientes);
+            // Enviamos los resultados de ambas consultas a la vista
+            res.render('registrarPlato', { results: results, ingredientes: ingredientes });
+          }
+        });
+      }
+    });
+  });
 
 
-const mysql2 = require('mysql2/promise');
 
 
 
-router.get('/search', async (req, res) => {
-    const q = req.query.q;
+    //RUTA PARA EDITAR PLATO
+    router.get('/editarIngredientes/:ID', (req, res) => {
+        const id = req.params.ID;
+        conexion.query("SELECT * FROM ingrediente where ID=?", [id], (error, results) => {
+            if (error) {
+                throw error;
+            } else {
+                res.render('editarIngredientes', { results: results[0] });
+            }
+        })
+    })
 
-    // Conexión a la base de datos
-    const connection = await mysql2.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'rest'
+
+
+
+        +
+        //PROCESOS ////////////////////////// AAAAAAAAAAAAAAAAAAA/////////////////////////
+        //RUTA PARA ordenar
+        router.get('/ordenar', (req, res) => {
+            res.render('ordenar');
+        })
+
+    ////// PUNTO PRUEBASSSSS ////// 
+
+
+    const mysql2 = require('mysql2/promise');
+
+
+
+    router.get('/search', async (req, res) => {
+        const q = req.query.q;
+
+        // Conexión a la base de datos
+        const connection = await mysql2.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+            database: 'rest'
+        });
+
+        // Consulta los datos de la tabla
+        const [rows, fields] = await connection.execute('SELECT * FROM empleado WHERE nombre LIKE ?', [`%${q}%`]);
+
+        // Devuelve los resultados en formato JSON
+        res.json(rows);
     });
 
-    // Consulta los datos de la tabla
-    const [rows, fields] = await connection.execute('SELECT * FROM empleado WHERE nombre LIKE ?', [`%${q}%`]);
-
-    // Devuelve los resultados en formato JSON
-    res.json(rows);
-});
-
-module.exports = router;
+    module.exports = router;

@@ -1,0 +1,20 @@
+
+Para ver los ingredientes de todos los platos
+
+SELECT Plato.Nombre AS Plato, Plato.Precio, Ingrediente.Nombre AS Ingrediente, Plato_Ingrediente.Cantidad, Plato_Ingrediente.Unidad
+FROM Plato
+JOIN Plato_Ingrediente ON Plato.ID = Plato_Ingrediente.Plato_ID
+JOIN Ingrediente ON Ingrediente.ID = Plato_Ingrediente.Ingrediente_ID
+WHERE Plato.ID = [ID del plato];
+
+
+
+
+Para nuevo plato
+
+INSERT INTO Plato (Nombre, Descripcion, Precio, ID_Categoria_Plato)
+VALUES ('Hamburguesa sin queso', 'Hamburguesa de carne de res en pan de hamburguesa', 7.99, 1);
+
+INSERT INTO Plato_Ingrediente (Plato_ID, Ingrediente_ID, Cantidad, Unidad, Prioridad)
+VALUES (LAST_INSERT_ID(), 1, 1, 'unidad', 1),
+       (LAST_INSERT_ID(), 2, 1, 'unidad', 2);

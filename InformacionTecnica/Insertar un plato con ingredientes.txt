@@ -1,0 +1,22 @@
+Insertar un plato con ingredientes:
+
+
+-- Insertar los ingredientes primero
+
+INSERT INTO Ingrediente(Nombre, Descripcion) VALUES ('Pan de hamburguesa', 'Pan de hamburguesa artesanal');
+INSERT INTO Ingrediente(Nombre, Descripcion) VALUES ('Carne de res', 'Carne de res de primera calidad');
+INSERT INTO Ingrediente(Nombre, Descripcion) VALUES ('Queso cheddar', 'Queso cheddar fundido');
+
+-- Insertar el plato
+
+INSERT INTO Plato(Nombre, Descripcion, Precio, ID_Categoria_Plato)
+VALUES ('Hamburguesa con queso', 'Deliciosa hamburguesa con queso cheddar', 14.50, 1);
+
+-- Insertar los ingredientes del plato
+
+INSERT INTO Plato_Ingrediente(Plato_ID, Ingrediente_ID, Cantidad, Unidad, Prioridad)
+VALUES (1, 1, 2, 'unidades', 1);
+INSERT INTO Plato_Ingrediente(Plato_ID, Ingrediente_ID, Cantidad, Unidad, Prioridad)
+VALUES (1, 2, 150, 'gramos', 2);
+INSERT INTO Plato_Ingrediente(Plato_ID, Ingrediente_ID, Cantidad, Unidad, Prioridad)
+VALUES (1, 3, 2, 'rebanadas', 3);
