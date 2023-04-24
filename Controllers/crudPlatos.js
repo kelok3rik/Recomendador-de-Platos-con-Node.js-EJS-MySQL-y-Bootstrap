@@ -7,12 +7,15 @@ exports.save = (req, res) => {
   const precio = req.body.PRECIO;
   const descripcion = req.body.DESCRIPCION;
   const categoria = req.body.CATEGORIA;
+  const datos = req.body.datos;
 
+
+  console.log("Esto llega al crud "+nombre+" "+precio+" "+" "+descripcion+" "+" "+categoria+" "+datos);
 
   
 
 
-  console.log(nombre,precio,descripcion,categoria);
+  
 
 
   //PARA LA TABLA PLATO_INGREDIENTE
@@ -20,7 +23,7 @@ exports.save = (req, res) => {
   // obtener los datos de la tabla de ingredientes
   
 
-   console.log(ingredientes);
+   
 
   // conexion.query('INSERT INTO plato (nombre, precio, descripcion, id_categoria_plato) VALUES (?, ?, ?, ?)', [nombre, precio, descripcion, categoria], (error, result) => {
   //   if (error) {

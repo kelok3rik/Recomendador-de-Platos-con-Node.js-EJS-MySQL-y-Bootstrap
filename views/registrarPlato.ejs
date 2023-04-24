@@ -88,9 +88,9 @@
 
     <div class="container-fluid p-5">
         <div class="card-header">
-            <div class="card-header">Nuevo Registro</div>
+            <div class="card-header">Nuevo Registros</div>
             <div class="card-body">
-                <form action="/registrarPlatos" method="POST">
+                <form id="form" action="/registrarPlatos" method="POST">
                     <div class="mb-3">
                         <label for="user" class="form-label">NOMBRE</label>
                         <input type="text" class="form-control" id="NOMBRE" name="NOMBRE" tabindex="1">
@@ -161,8 +161,8 @@
                         </div>
                     </div>
 
-                    <table id="tabla" name="tabla" class="table table-striped table-bordered table-hover ">
-                        <thead>
+                    <table id='table' class="table table-primary table-bordered table-striped table-hover">
+                        <thead class="table-success">
                             <tr class="bg-primary text-white">
                                 <th scope="col">NOMBRE</th>
                                 <th scope="col">CANTIDAD</th>
@@ -172,8 +172,16 @@
 
                             </tr>
                         </thead>
-                        <tbody>
-                          
+                        <tbody id="table-body">
+                            <tr>
+
+                            </tr>
+                            <tr>
+
+                            </tr>
+                            <tr>
+
+                            </tr>
                         </tbody>
 
                     </table>
@@ -182,6 +190,10 @@
 
                     <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
                     <a href="/mantenimientoPlatos" class="btn btn-secondary">Cancelar</a>
+
+                    <input type="text" id="datos" name="datos" hidden>
+
+
                 </form>
             </div>
         </div>
@@ -208,45 +220,134 @@
 
 <script>
 
-    $(document).ready(function () {
-        // Inicializar DataTable
-        $('#tabla').DataTable({
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-            },
-        });
 
-        var table = $('#tabla').DataTable();
+    let button = document.getElementById('button1');
+    let select1 = document.getElementById('select1');
+    let input1 = document.getElementById('input1');
+    let select2 = document.getElementById('select2');
+    let input3 = document.getElementById('input3');
+    let tableBody = document.getElementById('table-body');
 
-        // Función para eliminar una fila
-        function eliminarFila() {
-            var fila = $(this).closest('tr');
-            table.row(fila).remove().draw();
-        }
+    button.addEventListener('click', function () {
+       
+        let ingrediente = select1.value;
+        let cantidad = input1.value;
+        let unidad = select2.value;
+        let prioridad = input3.value;
 
-        // Vincular el botón "Eliminar" a la función eliminarFila
-        $('#tabla tbody').on('click', '.btn-eliminar', eliminarFila);
+        // Crear una nueva fila en la tabla
+        let newRow = tableBody.insertRow();
+
+        // Agregar celdas a la fila
+        let cell1 = newRow.insertCell(0);
+        let cell2 = newRow.insertCell(1);
+        let cell3 = newRow.insertCell(2);
+        let cell4 = newRow.insertCell(3);
+        let cell5 = newRow.insertCell(4);
+
+        // Agregar contenido a las celdas
+        cell1.innerHTML = ingrediente;
+        cell2.innerHTML = cantidad;
+        cell3.innerHTML = unidad;
+        cell4.innerHTML = prioridad;
+        cell5.innerHTML = '<button class="btn btn-danger" type="button" onclick="eliminarFila(this)">Eliminar</button>'; // Agregado botón de eliminar
+
+        //pruebaa
+       
 
 
-        // Manejar evento de clic en el botón de agregar
-        $('#button1').click(function () {
-            var dropdownValue1 = $('#select1').val();
-            var inputValue = $('#input1').val();
-            var dropdownValue2 = $('#select2').val();
-            var inputValue2 = $('#input3').val();
-            if (dropdownValue1 != "" && inputValue != "" && dropdownValue2 != "" && inputValue2 != "") {
-                $('#tabla').DataTable().row.add([dropdownValue1, inputValue, dropdownValue2, inputValue2, '<button type="button" class="btn btn-danger btn-sm btn-eliminar" >Eliminar</button>']).draw();
-                // $('#select1').val("Seleccionar opción..."); // Reiniciar valor predeterminado del primer select
-                $('#input1').val("1"); // Limpiar campo de texto
-                // $('#select2').val("Seleccionar opción..."); // Reiniciar valor predeterminado del segundo select
-                $('#input3').val("1"); // Limpiar campo de texto
-            } else {
-                alert("Debe seleccionar las opciones y proporcionar un valor.");
-            }
-        });
+        const datos = [
+            { plato_id: 5, ingrediente_id: 6, cantidad: 200, unidad: 'gr', prioridad: 1 },
+            { plato_id: 5, ingrediente_id: 7, cantidad: 1, unidad: 'un', prioridad: 2 },
+            { plato_id: 5, ingrediente_id: 8, cantidad: 250, unidad: 'ml', prioridad: 1 }
+        ];
+
+        console.log(datos);
+
+        let dato = document.getElementById('datos').value;
+        dato.value = datos;
+        
+        console.log(datos);
+        console.log("Esto esta en el input: "+dato.value);
+        
+
+
+
+        // Limpiar los valores de los campos de entrada después de agregar la fila
+        select1.selectedIndex = 0;
+        input1.value = '';
+        select2.selectedIndex = 0;
+        input3.value = '';
     });
 
-    
+    // Agregar evento de clic al botón de eliminar para eliminar la fila correspondiente
+    function eliminarFila(boton) {
+        var row = boton.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    ///PRUEBAAAAA////////////////
+
+
+    // const datos = [
+    //     { plato_id: 5, ingrediente_id: 6, cantidad: 200, unidad: 'gr', prioridad: 1 },
+    //     { plato_id: 5, ingrediente_id: 7, cantidad: 1, unidad: 'un', prioridad: 2 },
+    //     { plato_id: 5, ingrediente_id: 8, cantidad: 250, unidad: 'ml', prioridad: 1 }
+    // ];
+
+    // let dato = document.getElementById('datos').value;
+    // dato.value = JSON.stringify(datos);
+
+    // console.log(dato);
+
+
+
+
+
+
+
+
+
+
+    // $(document).ready(function () {
+    //     // Inicializar DataTable
+    //     $('#tabla').DataTable({
+    //         "language": {
+    //             "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
+    //         },
+    //     });
+
+    //     var table = $('#tabla').DataTable();
+
+    //     // Función para eliminar una fila
+    //     function eliminarFila() {
+    //         var fila = $(this).closest('tr');
+    //         table.row(fila).remove().draw();
+    //     }
+
+    //     // Vincular el botón "Eliminar" a la función eliminarFila
+    //     $('#tabla tbody').on('click', '.btn-eliminar', eliminarFila);
+
+
+    //     // Manejar evento de clic en el botón de agregar
+    //     $('#button1').click(function () {
+    //         var dropdownValue1 = $('#select1').val();
+    //         var inputValue = $('#input1').val();
+    //         var dropdownValue2 = $('#select2').val();
+    //         var inputValue2 = $('#input3').val();
+    //         if (dropdownValue1 != "" && inputValue != "" && dropdownValue2 != "" && inputValue2 != "") {
+    //             $('#tabla').DataTable().row.add([dropdownValue1, inputValue, dropdownValue2, inputValue2, '<button type="button" class="btn btn-danger btn-sm btn-eliminar" >Eliminar</button>']).draw();
+    //             // $('#select1').val("Seleccionar opción..."); // Reiniciar valor predeterminado del primer select
+    //             $('#input1').val("1"); // Limpiar campo de texto
+    //             // $('#select2').val("Seleccionar opción..."); // Reiniciar valor predeterminado del segundo select
+    //             $('#input3').val("1"); // Limpiar campo de texto
+    //         } else {
+    //             alert("Debe seleccionar las opciones y proporcionar un valor.");
+    //         }
+    //     });
+    // });
+
+
 
 
 </script>

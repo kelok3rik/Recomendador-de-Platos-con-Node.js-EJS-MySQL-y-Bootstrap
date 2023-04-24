@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ejemplo de obtención de valores de tabla HTML</title>
+</head>
+<body>
+	<table id="miTabla">
+		<thead>
+			<tr>
+				<th>Nombre</th>
+				<th>Edad</th>
+				<th>País</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Lucía</td>
+				<td>25</td>
+				<td>México</td>
+			</tr>
+			<tr>
+				<td>Pedro</td>
+				<td>30</td>
+				<td>Argentina</td>
+			</tr>
+			<tr>
+				<td>María</td>
+				<td>28</td>
+				<td>Chile</td>
+			</tr>
+		</tbody>
+	</table>
+	<button onclick="obtenerDatosTabla()">Obtener datos de la tabla</button>
+	<script>
+		function obtenerDatosTabla() {
+			// Obtener la referencia de la tabla
+			var tabla = document.getElementById("miTabla");
+			// Obtener las filas de la tabla
+			var filas = tabla.getElementsByTagName("tr");
+			// Crear un arreglo vacío para almacenar los datos
+			var datos = [];
+			// Recorrer las filas de la tabla
+			for (var i = 1; i < filas.length; i++) {
+				// Obtener las celdas de la fila
+				var celdas = filas[i].getElementsByTagName("td");
+				// Crear un objeto para almacenar los valores de la fila
+				var fila = {
+					nombre: "",
+					edad: "",
+					pais: ""
+				};
+				// Recorrer las celdas de la fila y asignar los valores al objeto
+				for (var j = 0; j < celdas.length; j++) {
+					if (j === 0) {
+						fila.nombre = celdas[j].innerHTML;
+					} else if (j === 1) {
+						fila.edad = celdas[j].innerHTML;
+					} else if (j === 2) {
+						fila.pais = celdas[j].innerHTML;
+					}
+				}
+				// Agregar el objeto al arreglo de datos
+				datos.push(fila);
+			}
+			// Imprimir los datos en la consola
+			console.log(datos);
+		}
+	</script>
+</body>
+</html>
