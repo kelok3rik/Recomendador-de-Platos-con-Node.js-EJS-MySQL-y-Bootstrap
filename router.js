@@ -141,9 +141,9 @@ router.get('/mantenimientoPlatos', (req, res) => {
     })
 })
 
-//const crudIngrediente = require('./Controllers/crudIngrediente');
-router.post('/registrarPlatos', crudIngrediente.save);
-router.post('/editarPlatos', crudIngrediente.update);
+const crudPlatos = require('./Controllers/crudPlatos');
+router.post('/registrarPlatos', crudPlatos.save);
+router.post('/editarPlatos', crudPlatos.update);
 
 //RUTA PARA CREAR UN PLATO
 
@@ -197,26 +197,6 @@ router.get('/registrarPlato', (req, res) => {
     ////// PUNTO PRUEBASSSSS ////// 
 
 
-    const mysql2 = require('mysql2/promise');
-
-
-
-    router.get('/search', async (req, res) => {
-        const q = req.query.q;
-
-        // Conexión a la base de datos
-        const connection = await mysql2.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'rest'
-        });
-
-        // Consulta los datos de la tabla
-        const [rows, fields] = await connection.execute('SELECT * FROM empleado WHERE nombre LIKE ?', [`%${q}%`]);
-
-        // Devuelve los resultados en formato JSON
-        res.json(rows);
-    });
+    
 
     module.exports = router;
