@@ -3,6 +3,7 @@ const conexion = require('../DATABASE/db');
 exports.save = (req, res) => {
   const nombre = req.body.NOMBRE;
   const descripcion = req.body.DESCRIPCION;
+  console.log(req.body);
 
 
 

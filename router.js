@@ -142,7 +142,7 @@ router.get('/mantenimientoPlatos', (req, res) => {
 })
 
 const crudPlatos = require('./Controllers/crudPlatos');
-router.post('/registrarPlatos', crudPlatos.save);
+router.post('/savePlatos', crudPlatos.save);
 router.post('/editarPlatos', crudPlatos.update);
 
 //RUTA PARA CREAR UN PLATO
@@ -150,53 +150,78 @@ router.post('/editarPlatos', crudPlatos.update);
 router.get('/registrarPlato', (req, res) => {
     // Consulta para obtener las categorías de platos
     conexion.query('SELECT * FROM categoria_plato', (error, results) => {
-      if (error) {
-        throw error;
-      } else {
-        // Consulta para obtener los ingredientes
-        conexion.query('SELECT * FROM ingrediente', (error, ingredientes) => {
-          if (error) {
+        if (error) {
             throw error;
-          } else {
-            // console.log(results);
-            // console.log(ingredientes);
-            // Enviamos los resultados de ambas consultas a la vista
-            res.render('registrarPlato', { results: results, ingredientes: ingredientes });
-          }
-        });
-      }
+        } else {
+            // Consulta para obtener los ingredientes
+            conexion.query('SELECT * FROM ingrediente', (error, ingredientes) => {
+                if (error) {
+                    throw error;
+                } else {
+                    // console.log(results);
+                    // console.log(ingredientes);
+                    // Enviamos los resultados de ambas consultas a la vista
+                    res.render('registrarPlato', { results: results, ingredientes: ingredientes });
+                }
+            });
+        }
     });
-  });
+});
 
 
 
 
 
-    //RUTA PARA EDITAR PLATO
-    router.get('/editarIngredientes/:ID', (req, res) => {
-        const id = req.params.ID;
-        conexion.query("SELECT * FROM ingrediente where ID=?", [id], (error, results) => {
-            if (error) {
-                throw error;
-            } else {
-                res.render('editarIngredientes', { results: results[0] });
-            }
-        })
+//RUTA PARA EDITAR PLATO
+router.get('/editarIngredientes/:ID', (req, res) => {
+    const id = req.params.ID;
+    conexion.query("SELECT * FROM ingrediente where ID=?", [id], (error, results) => {
+        if (error) {
+            throw error;
+        } else {
+            res.render('editarIngredientes', { results: results[0] });
+        }
+    })
+})
+
+
+
+
+    +
+    //PROCESOS ////////////////////////// AAAAAAAAAAAAAAAAAAA/////////////////////////
+    //RUTA PARA ordenar
+    router.get('/ordenar', (req, res) => {
+        res.render('ordenar');
     })
 
 
 
+////// PUNTO PRUEBASSSSS ////// 
 
-        +
-        //PROCESOS ////////////////////////// AAAAAAAAAAAAAAAAAAA/////////////////////////
-        //RUTA PARA ordenar
-        router.get('/ordenar', (req, res) => {
-            res.render('ordenar');
-        })
+// router.post('/registrarPlatoss', (req, res) => {
 
-    ////// PUNTO PRUEBASSSSS ////// 
+//     const { plato_nombre, plato_precio, plato_descripcion, plato_categoria, ingredientes } = req.body;
+//     const insertPlatoQuery = `INSERT INTO plato (Nombre,Descripcion,Precio,ID_CATEOGIRA_PLATO) VALUES ('${plato_nombre},${plato_descripcion},${plato_precio},${plato_categoria}')`;
+//     conexion.query(insertPlatoQuery, (err, result) => {
+//         if (err) {
+//            // console.log('Error al insertar plato:', err);
+//            // res.status(500).send('Error al insertar plato en la base de datos.');
+//             return;
+//         }
+//         const plato_id = result.insertId;
+//         ingredientes.forEach(ingrediente => {
+//             const { ingrediente_id, cantidad, unidad, prioridad } = ingrediente;
+//             const insertPlatoIngredienteQuery = `INSERT INTO plato_ingredientes (Plato_ID, Ingrediente_ID, Cantidad, Unidad, Prioridad) VALUES (${plato_id}, ${ingrediente_id}, ${cantidad}, '${unidad}', ${prioridad})`;
+//             connection.query(insertPlatoIngredienteQuery, (err, result) => {
+//                 if (err) {
+//                     console.log('Error al insertar ingrediente en plato:', err);
+//                 }
+//             });
+//         });
+//         res.status(200).send('Plato registrado exitosamente.');
 
+//     })
+// })
 
-    
 
     module.exports = router;

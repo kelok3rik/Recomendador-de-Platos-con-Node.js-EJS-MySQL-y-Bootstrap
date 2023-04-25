@@ -90,7 +90,7 @@
         <div class="card-header">
             <div class="card-header">Nuevo Registros</div>
             <div class="card-body">
-                <form id="form" action="/registrarPlatos" method="POST">
+                <form id="form" action="/savePlatos" method="POST">
                     <div class="mb-3">
                         <label for="user" class="form-label">NOMBRE</label>
                         <input type="text" class="form-control" id="NOMBRE" name="NOMBRE" tabindex="1">
@@ -130,7 +130,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3 mb-2">
-                                <input type="number" onclick="agregarUno()" class="form-control" id="input1" min='1'
+                                <input type="number" class="form-control" id="input1" min='1'
                                     placeholder="Ingrese la cantidad">
                             </div>
                             <div class="col-md-3 mb-2">
@@ -173,27 +173,15 @@
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                            <tr>
 
-                            </tr>
-                            <tr>
-
-                            </tr>
-                            <tr>
-
-                            </tr>
                         </tbody>
 
                     </table>
 
 
 
-                    <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
+                    <button class="btn btn-primary" type="button" onclick="registrarPlato()">Guardar</button>
                     <a href="/mantenimientoPlatos" class="btn btn-secondary">Cancelar</a>
-
-                    <input type="text" id="datos" name="datos" hidden>
-
-
                 </form>
             </div>
         </div>
@@ -218,7 +206,119 @@
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 
 
+
 <script>
+
+    const tableBody = document.getElementById("table-body");
+    const select1 = document.getElementById("select1");
+    const input1 = document.getElementById("input1");
+    const select2 = document.getElementById("select2");
+    const input3 = document.getElementById("input3");
+    const button1 = document.getElementById("button1");
+
+    button1.addEventListener("click", agregarFila);
+
+    function agregarFila() {
+        const fila = document.createElement("tr");
+
+        const nombre = document.createElement("td");
+        nombre.innerHTML = select1.value;
+
+        const cantidad = document.createElement("td");
+        cantidad.innerHTML = input1.value;
+
+        const medida = document.createElement("td");
+        medida.innerHTML = select2.value;
+
+        const prioridad = document.createElement("td");
+        prioridad.innerHTML = input3.value;
+
+        console.log(nombre.innerHTML);
+
+        const acciones = document.createElement("td");
+
+        const botonEliminar = document.createElement("button");
+
+        botonEliminar.innerText = "Eliminar";
+        botonEliminar.addEventListener("click", function () {
+            fila.remove();
+        });
+
+        acciones.appendChild(botonEliminar);
+
+        fila.appendChild(nombre);
+        fila.appendChild(cantidad);
+        fila.appendChild(medida);
+        fila.appendChild(prioridad);
+        fila.appendChild(acciones);
+
+        tableBody.appendChild(fila);
+
+        // Limpiar los campos después de agregar una fila
+        input1.value = "";
+        input3.value = "";
+    }
+
+    async function registrarPlato() {
+        const nombrePlato = document.getElementById("NOMBRE").value;
+        const descripcionPlato = document.getElementById("DESCRIPCION").value;
+        const precioPlato = document.getElementById("PRECIO").value;
+        const categoriaPlato = document.getElementById("CATEGORIA").value;
+
+
+        // Obtener los ingredientes de la tabla y agregarlos a un arreglo
+        const ingredientes = [];
+        const filas = document.querySelectorAll("#table-body tr");
+
+        // console.log(filas);
+
+        filas.forEach((fila) => {
+            const celdas = fila.querySelectorAll("td");
+
+            const ingrediente = {
+                nombre: celdas[0].innerHTML,
+                cantidad: celdas[1].innerHTML,
+                medida: celdas[2].innerHTML,
+                prioridad: celdas[3].innerHTML,
+            };
+            ingredientes.push(ingrediente);
+        });
+        try {
+            const response = await fetch("http://localhost:5000/savePlatos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nombrePlato: nombrePlato,
+                    descripcionPlato: descripcionPlato,
+                    precioPlato: precioPlato,
+                    categoriaPlato: categoriaPlato,
+                    ingredientes: ingredientes,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error al registrar el plato.");
+            }
+            alert("vaina existosa");
+
+
+        } catch (error) {
+            console.error(error);
+            alert("Error al registrar el plato.");
+        }
+
+
+
+
+
+    }
+
+
+</script>
+
+<!-- <script>
 
 
     let button = document.getElementById('button1');
@@ -229,7 +329,7 @@
     let tableBody = document.getElementById('table-body');
 
     button.addEventListener('click', function () {
-       
+
         let ingrediente = select1.value;
         let cantidad = input1.value;
         let unidad = select2.value;
@@ -252,26 +352,6 @@
         cell4.innerHTML = prioridad;
         cell5.innerHTML = '<button class="btn btn-danger" type="button" onclick="eliminarFila(this)">Eliminar</button>'; // Agregado botón de eliminar
 
-        //pruebaa
-       
-
-
-        const datos = [
-            { plato_id: 5, ingrediente_id: 6, cantidad: 200, unidad: 'gr', prioridad: 1 },
-            { plato_id: 5, ingrediente_id: 7, cantidad: 1, unidad: 'un', prioridad: 2 },
-            { plato_id: 5, ingrediente_id: 8, cantidad: 250, unidad: 'ml', prioridad: 1 }
-        ];
-
-        console.log(datos);
-
-        let dato = document.getElementById('datos').value;
-        dato.value = datos;
-        
-        console.log(datos);
-        console.log("Esto esta en el input: "+dato.value);
-        
-
-
 
         // Limpiar los valores de los campos de entrada después de agregar la fila
         select1.selectedIndex = 0;
@@ -287,6 +367,58 @@
     }
 
     ///PRUEBAAAAA////////////////
+
+    // Obtener el botón de guardar
+    var guardarBtn = document.getElementById("guardar-btn");
+
+    // Agregar un evento de clic al botón de guardar
+    guardarBtn.addEventListener("click", function () {
+        // Obtener la tabla y sus filas
+        var table = document.getElementById("table");
+        var rows = table.children[1].children;
+
+        // Crear un array vacío para almacenar los datos
+        var data = [];
+
+        // Iterar sobre las filas de la tabla y obtener los valores de cada celda
+        for (var i = 1; i < rows.length; i++) {
+            var row = rows[i];
+            var cells = row.getElementsByTagName("td");
+            var nombre = cells[0].innerHTML;
+            var cantidad = cells[1].innerHTML;
+            var medida = cells[2].innerHTML;
+            var prioridad = cells[3].innerHTML;
+
+            // Agregar los valores a un objeto JavaScript y agregar el objeto al array
+            data.push({ nombre: nombre, cantidad: cantidad, medida: medida, prioridad: prioridad });
+            console.log(data);
+        }
+
+        // Enviar los datos al servidor mediante una solicitud HTTP POST
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/guardar"); // Ruta en tu servidor para guardar los datos
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log("Datos guardados correctamente");
+            } else {
+                console.error("Error al guardar los datos: " + xhr.statusText);
+            }
+        };
+        xhr.send(JSON.stringify(data));
+    });
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // const datos = [
@@ -350,4 +482,4 @@
 
 
 
-</script>
+</script> -->
