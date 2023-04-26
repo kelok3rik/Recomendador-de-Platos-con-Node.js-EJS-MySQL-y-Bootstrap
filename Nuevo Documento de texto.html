@@ -1,0 +1,38 @@
+<table>
+  <tr>
+    <th>Producto</th>
+    <th>Precio</th>
+  </tr>
+  <tr>
+    <td>Producto A</td>
+    <td>10.50</td>
+  </tr>
+  <tr>
+    <td>Producto B</td>
+    <td>15.75</td>
+  </tr>
+  <tr>
+    <td>Producto C</td>
+    <td>20.00</td>
+  </tr>
+</table>
+
+<script>
+  const table = document.querySelector("table");
+  let total = 0;
+
+  for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const cell = row.cells[1];
+    const value = parseFloat(cell.textContent);
+    total += value;
+  }
+
+  console.log("Total:", total);
+  
+  const today = new Date();
+  // Convertir la fecha a una cadena con el formato YYYY-MM-DD
+const dateString = today.toISOString().slice(0, 10);
+console.log(dateString);
+
+</script>

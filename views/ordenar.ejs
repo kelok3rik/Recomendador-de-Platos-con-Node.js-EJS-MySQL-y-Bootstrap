@@ -66,8 +66,8 @@
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="/mantenimientoCategoria">Categoría</a></li>
                             <li><a class="dropdown-item" href="/mantenimientoEmpleado">Empleado</a></li>
-                            <li><a class="dropdown-item" href="/Menu">Menú</a></li>
-                            <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                            <li><a class="dropdown-item" href="/mantenimientoPlatos">Platos</a></li>
+                            <li><a class="dropdown-item" href="/mantenimientoIngredientes">Ingredientes</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -85,17 +85,58 @@
             </div>
         </div>
     </nav>
+
+
+
     <div class="container-fluid p-5 ">
         <div class="col-md-12 shadow-lg p-2 mb-5 bg-light rounded ">
+            <h1 class="text-center">Ordenar</h1>
+            <hr>
+
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label for="cliente" class="form-label">Cliente</label>
+                    <select class="form-select" id="cliente" name="cliente">
+                        <% for (let i=0; i < clientes.length; i++) { %>
+                            <option value="<%= clientes[i].ID %>">
+                                <%= clientes[i].Nombre %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <label for="plato" class="form-label">Plato</label>
+                    <select class="form-select" id="select1" name="select1">
+                        <% for (let i=0; i < results.length; i++) { %>
+                            <option value="<%= results[i].Nombre + ',' + results[i].Precio + ',' + results[i].ID %>">
+                                <%= results[i].Nombre %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label for="Cantidad" class="form-label">Cantidad</label>
+                    <input type="number" class="form-control" id="input1" name="input" min="1"
+                        placeholder="Ingrese cantidad">
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-2">
+
+                <button class="btn btn-primary" type="button" id="button1">Agregar</button>
+            </div>
+
+
             <div class="table-responsive table-responsive-sm">
-
-                <button id="addRow" class="btn btn-primary">Add new row</button>
-
-
                 <table id="tablaUser" class="table table-striped table-bordered table-hover ">
                     <thead>
                         <tr class="bg-primary text-white">
-                            <th scope="col">PRODUCTO</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">NOMBRE</th>
                             <th scope="col">CANTIDAD</th>
                             <th scope="col">PRECIO</th>
                             <th scope="col">TOTAL</th>
@@ -104,14 +145,8 @@
 
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+                    <tbody id="table-body">
+
                     </tbody>
 
                 </table>
@@ -119,10 +154,33 @@
                 <label for="total">Total:</label>
                 <input id="total" name="total" value="0">
 
+                <hr>
 
-                <input type="text" id="search" />
-                <div id="results"></div>
+                <label for="total">Recomendaciones</label>
+                <table id="tablaRecomendacion" class="table table-striped table-bordered table-hover ">
+                    <thead>
+                        <tr class="bg-primary text-white">
+                            <th scope="col">NOMBRE</th>
 
+
+                        </tr>
+                    </thead>
+                    <tbody id="table-bodyrecomendacion">
+
+                    </tbody>
+
+                </table>
+
+                <button class="btn btn-primary" type="button" id="buttonRecomendacion"
+                    onclick="buscarRecomendacion()">Buscar</button>
+
+
+
+
+                <hr>
+                <button class="btn btn-primary" type="button" onclick="registrarPedido()">Guardar</button>
+
+                <a href="/ordenar" class="btn btn-secondary">Cancelar</a>
 
             </div>
         </div>
@@ -152,99 +210,227 @@
     <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap5.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            $('#tablaUser').DataTable({
-                "language": {
-                    "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
-                },
-                // dom: 'Bfrtip',
-                // buttons: [
-                //     'copy',
-                //     'csv',
-                //     'excel',   
-                //     'pdf',
-                //     {
-                //         extend: 'print',
-                //         text: 'Print all (not just selected)',
-                //         exportOptions: {
-                //             modifier: {
-                //                 selected: null
-                //             }
-                //         }
-                //     }
-                // ],
-                //select: true
-                responsive: true
+
+        const tableBody = document.getElementById("table-body");
+        const select1 = document.getElementById("select1");
+        const input1 = document.getElementById("input1");
+        const button1 = document.getElementById("button1");
+
+
+        // const selectElement = document.getElementById("select1");
+        // const selectedOptionValue = selectElement.value;
+        // const [selectedOptionName, selectedOptionPrice] = selectedOptionValue.split(",");
+        // console.log("Nombre seleccionado:", selectedOptionName);
+        // console.log("Precio seleccionado:", selectedOptionPrice);
+
+        //Convertir el precio a float
+        const PrecioTexto = input1.value;
+        const PrecioFloat = parseFloat(PrecioTexto);
+
+        //Convertir la cantidad a float 
+        const CantidadTexto = input1.value;
+        const CantidadFloat = parseFloat(CantidadTexto);
+
+        //
+        // const PrecioTexto = input1.value;
+        // const PrecioFloat = parseFloat(PrecioTexto);
+
+        //Calcular el total
+        // const totals = PrecioFloat * selectedOptionPrice;
+
+        button1.addEventListener("click", agregarFila);
+
+        function agregarFila() {
+
+            const selectElement = document.getElementById("select1");
+            const selectedOptionValue = selectElement.value;
+            const [selectedOptionName, selectedOptionPrice, selectedOptionId] = selectedOptionValue.split(",");
+            console.log("ID seleccionado:", selectedOptionId);
+            console.log("Nombre seleccionado:", selectedOptionName);
+            console.log("Precio seleccionado:", selectedOptionPrice);
+
+
+            //Convertir el precio a float
+            const PrecioFloat = parseFloat(selectedOptionPrice);
+
+            //Convertir la cantidad a float
+            const CantidadFloat = parseFloat(input1.value);
+
+            //Calcular el total
+            const totals = PrecioFloat * CantidadFloat;
+
+
+
+            const fila = document.createElement("tr");
+
+            const id = document.createElement("td");
+            id.innerHTML = selectedOptionId;
+
+            const nombre = document.createElement("td");
+            nombre.innerHTML = selectedOptionName;
+
+            const cantidad = document.createElement("td");
+            cantidad.innerHTML = input1.value;
+
+            const precio = document.createElement("td");
+            precio.innerHTML = selectedOptionPrice;
+
+            const total = document.createElement("td");
+            total.innerHTML = totals;
+
+
+
+            const acciones = document.createElement("td");
+
+            const botonEliminar = document.createElement("button");
+
+            botonEliminar.innerText = "Eliminar";
+            botonEliminar.addEventListener("click", function () {
+                fila.remove();
+                sumarFila();
             });
 
-            var t = $('#tablaUser').DataTable();
-            var counter = 1;
+            acciones.appendChild(botonEliminar);
 
-            $('#addRow').on('click', function () {
-                t.row.add([counter, counter, counter, counter + '4', counter]).draw(false);
+            fila.appendChild(id);
+            fila.appendChild(nombre);
+            fila.appendChild(cantidad);
+            fila.appendChild(precio);
+            fila.appendChild(total);
+            fila.appendChild(acciones);
 
+            tableBody.appendChild(fila);
 
-                counter++;
+            // Limpiar los campos después de agregar una fila
+            input1.value = "";
+            sumarFila();
+        }
 
+        function sumarFila() {
+            const table = document.querySelector("table");
+            let total = 0;
 
-
-                SumarColumnas();
-
-
-            });
-
-
-
-            function SumarColumnas() {
-
-                var t = $('#tablaUser').DataTable();
-
-                var totalInput = document.getElementById("total");
-
-
-                // Obtener la columna que queremos sumar
-                var column = t.column(2).data();
-
-                // Sumar los valores de la columna utilizando la función reduce
-                var total = column.reduce(function (acc, val) {
-                    return acc + parseFloat(val);
-                }, 0);
-
-                // Imprimir el resultado
-                // Cambiar el valor del input
-                totalInput.value = total;
-
+            for (let i = 1; i < table.rows.length; i++) {
+                const row = table.rows[i];
+                const cell = row.cells[4];
+                const value = parseFloat(cell.textContent);
+                total += value;
             }
 
-        });
+            const totalInput = document.getElementById("total");
+            totalInput.value = total.toFixed(2);
+            console.log("Total:", total);
+        }
 
 
-        ///////////////////////////////////
+        ///PRUEBA
+
+        async function registrarPedido() {
+
+            const totalPlato = document.getElementById("total").value;
+            const idCliente = document.getElementById("cliente").value;
 
 
 
-    </script>
+            // Obtener los detalle del pedido de la tablay agregarlos a un arreglo
+            const detalles = [];
+            const filas = document.querySelectorAll("#table-body tr");
 
+            // console.log(filas);
 
+            filas.forEach((fila) => {
+                const celdas = fila.querySelectorAll("td");
 
-    <script>
-        var searchInput = document.getElementById('search');
-        var resultsDiv = document.getElementById('results');
-
-        searchInput.addEventListener('keyup', function () {
-            fetch('/search?q=' + searchInput.value)
-                .then(function (response) {
-                    return response.json();
-                })
-                .then(function (results) {
-                    var html = '';
-                    for (var i = 0; i < results.length; i++) {
-                        html += '<div>' + results[i].name + '</div>';
-                    }
-                    resultsDiv.innerHTML = html;
+                const detalle = {
+                    productoID: celdas[0].innerHTML,
+                    cantidad: celdas[2].innerHTML,
+                    //precio: celdas[3].innerHTML,
+                    total: celdas[4].innerHTML,
+                };
+                detalles.push(detalle);
+            });
+            try {
+                const response = await fetch("http://localhost:5000/savePedido", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        totalPlato: totalPlato,
+                        idCliente: idCliente,
+                        detalles: detalles,
+                    }),
                 });
-        });
+
+                if (!response.ok) {
+                    throw new Error("Error al registrar al registrar pedido.");
+                }
+                alert("iNSERTADO CORRECTAMENTE");
+                window.location.href = "/ordenar";
+
+
+            } catch (error) {
+                console.error(error);
+                alert("Error al registrar el plato.");
+            }
+
+
+
+
+
+        }
+
+        /// prueba 
+
+        // const buttonRecomendacion = document.getElementById("buttonRecomendacion");
+        // buttonRecomendacion.addEventListener("click", buscarRecomendacion);
+
+        function buscarRecomendacion() {
+            const idCliente = document.getElementById("cliente").value;
+
+            fetch('http://localhost:5000/recomendacion/' + idCliente)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById("table-bodyrecomendacion");
+
+
+                    for (i = 0; i < data.length; i++) {
+                        if (data[i] == undefined) { } else {
+                            for (j = 0; j < data[i].length; j++) {
+                                if (data[i][j] == undefined) { } else {
+                                    for (k = 0; k < data[j].length; k++) {
+                                        if (data[i][j][k] == undefined) { } else {
+                                            const fila = document.createElement("tr");
+                                            const nombre = document.createElement("td");
+                                            nombre.innerHTML = data[i][j][k].Nombre;
+                                            fila.appendChild(nombre);
+                                            tableBody.appendChild(fila);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+                })
+                .catch(error => console.error(error));
+
+
+        }
+
     </script>
+
+
+
+
 
 </body>
 
