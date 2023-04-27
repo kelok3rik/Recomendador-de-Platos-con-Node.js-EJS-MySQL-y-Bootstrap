@@ -77,7 +77,7 @@ exports.buscarRecomendacion = (req, res) => {
             });
           });
         });
-  
+        //
         Promise.all(promesas)
           .then(data => {
             
