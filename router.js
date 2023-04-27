@@ -103,8 +103,8 @@ router.get('/mantenimientoIngredientes', (req, res) => {
             throw error;
         } else {
             console.log(results);
-            res.json(results);
-            // res.render('mantenimientoIngredientes', { results: results[0] });
+            
+             res.render('mantenimientoIngredientes', { results: results[0] });
         }
     })
 })
@@ -203,10 +203,20 @@ router.get('/registrarPlato', (req, res) => {
                     if (error) {
                         throw error;
                     } else {
-                        // console.log(results);
-                        // console.log(ingredientes);
-                        // Enviamos los resultados de ambas consultas a la vista
-                        res.render('ordenar', { results: results, clientes: clientes });
+                            conexion.query('SELECT * FROM necesidad', (error, necesidad) => {
+                                if (error) {
+                                    throw error;
+                                } else {
+                                    // console.log(results);
+                                    // console.log(ingredientes);
+                                    // Enviamos los resultados de ambas consultas a la vista
+                                     res.render('ordenar', { results: results, clientes: clientes, necesidad: necesidad });
+                                    
+                                }
+                            });
+            
+            
+                        
                     }
                 });
 
@@ -218,7 +228,7 @@ router.get('/registrarPlato', (req, res) => {
 
 const crudPedido = require('./Controllers/crudPedido');
 router.post('/savePedido', crudPedido.save);
-router.get('/recomendacion/:ID', crudPedido.buscarRecomendacion);
+router.get('/recomendacion', crudPedido.buscarRecomendacion);
 
 
 

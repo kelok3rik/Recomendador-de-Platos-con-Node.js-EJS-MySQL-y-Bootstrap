@@ -105,6 +105,16 @@
                     </select>
                 </div>
 
+                <div class="col-md-3 mb-2">
+                    <label for="necesidad" class="form-label">Necedidad</label>
+                    <select class="form-select" id="necesidad" name="necesidad">
+                        <% for (let i=0; i < necesidad.length; i++) { %>
+                            <option value="<%= necesidad[i].ID %>">
+                                <%= necesidad[i].Descripcion %>
+                            </option>
+                            <% } %>
+                    </select>
+                </div>
 
             </div>
             <div class="row">
@@ -387,8 +397,16 @@
 
         function buscarRecomendacion() {
             const idCliente = document.getElementById("cliente").value;
+            const idNecesidad = document.getElementById("necesidad").value;
 
-            fetch('http://localhost:5000/recomendacion/' + idCliente)
+            fetch('http://localhost:5000/recomendacion', {
+                method: 'GET',
+                headers: {
+                    'id_cliente': idCliente,
+                    'id_necesidad': idNecesidad,
+                },
+
+            })
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.getElementById("table-bodyrecomendacion");
@@ -423,7 +441,12 @@
                 })
                 .catch(error => console.error(error));
 
+            limpiarTabla();
+        }
 
+        function limpiarTabla() {
+            const tableBody = document.getElementById("table-bodyrecomendacion");
+            tableBody.innerHTML = "";
         }
 
     </script>

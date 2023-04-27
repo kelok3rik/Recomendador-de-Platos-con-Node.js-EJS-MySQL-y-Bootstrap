@@ -40,7 +40,10 @@ exports.save = (req, res) => {
 };
 
 exports.buscarRecomendacion = (req, res) => {
-    const id_cliente = req.params.ID;
+ 
+    const id_cliente = req.headers['id_cliente'];
+    const id_necesidad = req.headers['id_necesidad'];
+  
     new Promise((resolve, reject) => {
       conexion.query('SELECT plato.ID FROM `plato` INNER JOIN detalle_pedido on plato.ID = detalle_pedido.Plato_ID INNER JOIN pedido on pedido.ID = detalle_pedido.ID_Pedido where pedido.ID_Cliente = ?;', [id_cliente], (err, rows) => {
         if (err) {
@@ -50,11 +53,12 @@ exports.buscarRecomendacion = (req, res) => {
           aux = '';
           const rowsaux = [];
           for (i = 0; i < rows.length; i++) {
-            if (rows[i].ID != aux) {
+            if (!rowsaux.includes(rows[i].ID)) {
               rowsaux.push(rows[i].ID);
             }
-            aux = rows[i].ID;
           }
+          
+          console.log(rowsaux);
           resolve(rowsaux);
         }
       });
@@ -63,7 +67,7 @@ exports.buscarRecomendacion = (req, res) => {
        
         const promesas = rowsaux.map(element => {
           return new Promise((resolve, reject) => {
-            conexion.query('CALL recomendacion(?)', [element], (err, rows) => {
+            conexion.query('CALL recomendacion(?,?)', [element,id_necesidad], (err, rows) => {
               if (err) {
                 console.log('Error al obtener recomendaciones:', err);
                 reject('Error al obtener recomendaciones.');
