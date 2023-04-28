@@ -1,0 +1,1 @@
+Tener instalado node.js y mysql, tener un servidor reservado en el puerto 5000

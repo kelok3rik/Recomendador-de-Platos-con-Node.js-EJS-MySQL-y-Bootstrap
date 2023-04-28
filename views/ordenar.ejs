@@ -410,6 +410,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const tableBody = document.getElementById("table-bodyrecomendacion");
+                    let aux = [];
 
 
                     for (i = 0; i < data.length; i++) {
@@ -418,18 +419,24 @@
                                 if (data[i][j] == undefined) { } else {
                                     for (k = 0; k < data[j].length; k++) {
                                         if (data[i][j][k] == undefined) { } else {
-                                            const fila = document.createElement("tr");
-                                            const nombre = document.createElement("td");
-                                            nombre.innerHTML = data[i][j][k].Nombre;
-                                            fila.appendChild(nombre);
-                                            tableBody.appendChild(fila);
+                                            
+                                            if(!aux.some(e => e.ID === data[i][j][k].ID)){
+                                                aux.push(data[i][j][k]);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-
+                    console.log(aux);
+                    aux.forEach(element => {
+                        const fila = document.createElement("tr");
+                        const nombre = document.createElement("td");
+                        nombre.innerHTML = element.Nombre;
+                        fila.appendChild(nombre);
+                        tableBody.appendChild(fila);
+                    });
 
 
 

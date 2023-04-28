@@ -1,0 +1,17 @@
+//Primer querry: Se encarga de traer el historial de los platos que el cliente a pedido anteriormente 
+*Este query se ejecuta desde un endpoint
+
+SELECT plato.ID FROM `plato` INNER JOIN detalle_pedido on plato.ID = detalle_pedido.Plato_ID INNER JOIN pedido on pedido.ID = detalle_pedido.ID_Pedido where pedido.ID_Cliente = ?;'
+
+
+
+-- PROCEDURE: El primer select busca los ingredientes con mayor prioridad de este plato y en el segundo busca los platos que tengan ese ingrediente y esten en la necesidad del cliente; digase bajar de peso, aumentar, mantenerse. etc.
+
+
+BEGIN
+	DECLARE id_ingrediente INT DEFAULT 0;
+    
+	SELECT Ingrediente_ID into id_ingrediente FROM `plato_ingrediente` where Plato_ID = id_plato and Prioridad = (SELECT MIN(Prioridad) FROM plato_ingrediente WHERE Plato_ID =id_plato);
+    SELECT plato.ID, plato.Nombre, plato.Descripcion, plato.Precio,plato.ID_Categoria_Plato FROM plato inner join plato_ingrediente on plato_ingrediente.Plato_ID = plato.ID where plato_ingrediente.Ingrediente_ID = id_ingrediente and plato.id_nececidad = id_necesidad;
+    
+END
