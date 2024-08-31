@@ -43,6 +43,10 @@ Por ejemplo, si un cliente desea perder peso, el sistema recomendará platos eti
 
 Este procedimiento busca los ingredientes con mayor prioridad de un plato y luego recomienda otros platos que contengan ese ingrediente y que se ajusten a la necesidad específica del cliente (bajar de peso, aumentar, mantenerse, etc.).
 
+## Enlace Demostrativo
+
+Aquí un video demostrativo de la funcionalidad: [Ver Video](https://www.youtube.com/watch?v=dO1BjAGNNac).
+
 ```sql
 BEGIN
     DECLARE id_ingrediente INT DEFAULT 0;
@@ -60,3 +64,7 @@ BEGIN
     WHERE plato_ingrediente.Ingrediente_ID = id_ingrediente 
     AND plato.id_necesidad = id_necesidad;
 END;
+
+
+
+
